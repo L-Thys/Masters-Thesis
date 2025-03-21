@@ -1,6 +1,6 @@
 #!/bin/bash
-FILES=$(ls -1 results_logs_stats/sorted_sequences_by_dataset)
+FILES=$(ls -1 results_logs_stats/psms_by_dataset_useful_info_sorted)
 for f in $FILES
 do
-        output=$(sort -u results_logs_stats/sorted_sequences_by_dataset/$f > sorted_unique_sequences_by_dataset/$f)
+        output=$(sort -k1 -u results_logs_stats/psms_by_dataset_useful_info_sorted/$f > test/$f)
 done
