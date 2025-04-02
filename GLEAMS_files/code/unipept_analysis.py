@@ -80,5 +80,6 @@ for index, row in selected.iterrows():
         peptides = df[df[taxon_rank+"_name"]==taxon_name]["peptide"].tolist()
         selected.at[index, "count_including_subtaxa"] = len(peptides)
         selected.at[index,"peptides_including_subtaxa"] = peptides
+selected.drop(columns=["peptides","peptides_including_subtaxa"]).to_csv("test.csv")
 selected.to_csv(sys.argv[1]+sys.argv[3])
 # -----------------------------------
