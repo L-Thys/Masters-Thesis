@@ -192,6 +192,19 @@ def mismatches(blast_run):
     print("max percentage mismatch: ", (mismatches/mismatches["length"]).max())
     
 
+def check_if_a_peptide_can_match_the_same_protein_multiple_times():
+    files = glob.glob("results_logs_stats/blast/good_e_values/ncORFs_contaminants/*.csv")
+    for file in files:
+        file_name=file.split("/")[-1]
+        ncorfs_conts = pd.read_csv(file,delimiter=",")
+        homo = pd.read_csv("results_logs_stats/blast/good_e_values/homo_sapiens/"+file_name,delimiter=",")
+        df= pd.concat([ncorfs_conts, homo])
+        grouped = df.groupby(['qaccver','saccver']).size().reset_index().rename(columns={0:'count'})
+        if len(grouped[grouped["count"]!=1]!=0):
+            print(grouped[grouped["count"]!=1])
+            break
+
+
 # contaminant_and_ncorfs()
 # contaminant_and_ncorfs_exact_matches()
 # separating_out_ncorfs()
@@ -200,8 +213,9 @@ def mismatches(blast_run):
 # peptides_with_single_match_for_exact_matches("ncORFs_contaminants")
 # peptides_with_single_match_for_exact_matches("homo_sapiens")
 # peptides_matching_ncORF_and_homo_sapiens()
-mismatches("ncORFs_contaminants")
-mismatches("homo_sapiens")
+# mismatches("ncORFs_contaminants")
+# mismatches("homo_sapiens")
+check_if_a_peptide_can_match_the_same_protein_multiple_times()
 
 
 # results = pd.read_csv("results_logs_stats/blast/good_e_values/ncORFs_contaminants/fasta_sequences_PSMs_MSV000080679.csv",delimiter=",")
