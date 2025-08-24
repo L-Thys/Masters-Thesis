@@ -28,21 +28,25 @@ int main(int argc, char **argv){
     if (mgf.is_open()) {
         cout << "reading file: "<<mgf_file_name<<endl;
         int nr_of_spectra = 0;
-        string line = "";   
+        string line = "";
         string title = "";
         while (!mgf.eof()){
             while (line.substr(0,5) != "TITLE" && !mgf.eof()){
-                getline(mgf, line);                
+                getline(mgf, line);
             }
             if (line.substr(0,5) == "TITLE"){
                 title =line.substr(6);
                 title.pop_back(); // to remove "\r"
                 titles[nr_of_spectra] = title;
                 nr_of_spectra ++;
-                getline(mgf, line);                
+                getline(mgf, line);
             }
         }
         std::cout << "INFO: "<< nr_of_spectra << " titles extracted\n" <<endl;
+    }
+    else {
+	cerr << "problem with inputfile: " << mgf_file_name<<endl;
+	return 3;
     }
     mgf.close();
 
@@ -67,11 +71,11 @@ int main(int argc, char **argv){
         if (output.is_open()){
             while (line.substr(0,3) != "PSH" && !mztab.eof()){
                 output << line << endl;
-                getline(mztab, line);         
+                getline(mztab, line);
             }
             // line contains the PSH line
             output << line << "\ttitle\tMassIVE_dataset_id\tfile_name\tscan_number" << endl;
-            getline(mztab, line);         
+            getline(mztab, line);
 
             while (!mztab.eof()){
                 row.clear();
@@ -104,16 +108,25 @@ int main(int argc, char **argv){
                 {
                     cerr << "ERROR: did not find title for spectra_ref" << spectra_ref<<endl;
                     output << line << "\t" << endl;
-                }  
-                getline(mztab, line);         
+                }
+                getline(mztab, line);
             }
         }
+	else {
+		cerr << "problem with output file: " << output_file_name<<endl;
+        	return 4;
+    	}
         output.close();
         std::cout << "\nINFO: DONE!\n";
         cout << "writing to file: "<<output_file_name<<endl;
         cout << nr_of_titles_added << " titles added" <<endl;
         cout << spectra_ids_added.size() << " unique titles added" <<endl;
     }
+    else {
+        cerr << "problem with mztab file: " << mztab_file_name<<endl;
+        return 5;
+    }
+
     mztab.close();
     return 0;
 }

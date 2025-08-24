@@ -53,10 +53,12 @@ int main(int argc, char **argv){
                 << "Order of opt_ms_run[1]_aa_scores reversed from Casanovo v4.2.1 result to account for bug in Casanovo v4.2.1." << endl;
             // skip over original description & write out the rest of the metadata
             getline(input, line);
+
             while (line.substr(0,22) != "MTD\tms_run[1]-location" && !input.eof()){
-                getline(input, line);         
-                outfile << line << endl;
+                getline(input, line);
+		outfile << line << endl;
             }
+	    cout << "here";
             // keep PSH line to add later on
             getline(input, psh);
         }
@@ -69,6 +71,7 @@ int main(int argc, char **argv){
         for (size_t i = 3; i < argc; i++)
         {
             // open input file
+	    cerr << argv[i]<<endl;
             string input_file_name = argv[i];
             ifstream input(input_file_name);
             if (input.is_open()) {
